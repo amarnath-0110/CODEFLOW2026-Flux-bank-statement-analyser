@@ -2,56 +2,212 @@ body {
     margin: 0;
     padding: 0;
     font-family: Arial, sans-serif;
-    background: #0f172a;
+
+    min-height: 100vh;
+
+    background: linear-gradient(
+        135deg,
+        #020617,
+        #0f172a,
+        #172554
+    );
+
+    overflow-x: hidden;
+
+    position: relative;
 }
+
+
+body::before {
+    content: "";
+
+    position: absolute;
+
+    width: 450px;
+    height: 450px;
+
+    background: #2563eb;
+
+    filter: blur(150px);
+
+    opacity: 0.22;
+
+    top: 20%;
+    left: 35%;
+
+    z-index: 0;
+}
+
 
 .upload-container {
     display: flex;
     justify-content: center;
     align-items: center;
+
     min-height: 80vh;
+
     padding: 40px 20px;
+
+    position: relative;
+
+    z-index: 1;
 }
 
 .upload-card {
-    background: white;
-    padding: 40px;
-    width: 420px;
-    border-radius: 18px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    background: rgba(255, 255, 255, 0.08);
+
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+
+    border: 1px solid rgba(255,255,255,0.12);
+
+    padding: 45px;
+
+    width: 430px;
+
+    border-radius: 28px;
+
+    box-shadow:
+        0 8px 32px rgba(0, 0, 0, 0.35);
+
     text-align: center;
+
+    animation: float 4s ease-in-out infinite;
 }
+
+
+@keyframes float {
+
+    0% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(-6px);
+    }
+
+    100% {
+        transform: translateY(0px);
+    }
+}
+
 
 .upload-card h1 {
     margin-bottom: 10px;
-    color: #111827;
+
+    font-size: 3rem;
+
+    font-weight: 700;
+
+    color: white;
 }
+
 
 .upload-card p {
     margin-bottom: 25px;
-    color: #6b7280;
+
+    color: rgba(255,255,255,0.7);
+
+    font-size: 1.05rem;
 }
+
 
 .upload-label {
     display: block;
-    margin-bottom: 12px;
+
+    margin-bottom: 14px;
+
     font-weight: bold;
-    color: #374151;
+
+    font-size: 1rem;
+
+    color: white;
 }
+
+
+.filepond--root {
+    margin-bottom: 20px;
+}
+
+.filepond--panel-root {
+    background-color: rgba(255,255,255,0.05) !important;
+
+    border: 2px dashed rgba(255,255,255,0.2);
+
+    border-radius: 18px;
+
+    transition: 0.3s;
+}
+
+.filepond--panel-root:hover {
+    border-color: #60a5fa;
+}
+
+.filepond--drop-label {
+    color: white;
+}
+
+.filepond--label-action {
+    color: #60a5fa;
+}
+
+.filepond--credits {
+    display: none;
+}
+
 
 .upload-btn {
     margin-top: 20px;
+
     width: 100%;
-    padding: 14px;
+
+    padding: 15px;
+
     border: none;
-    border-radius: 10px;
-    background: #2563eb;
+
+    border-radius: 14px;
+
+    background: linear-gradient(
+        90deg,
+        #2563eb,
+        #06b6d4
+    );
+
     color: white;
+
     font-size: 16px;
+
+    font-weight: 600;
+
     cursor: pointer;
+
     transition: 0.3s ease;
 }
 
 .upload-btn:hover {
-    background: #1d4ed8;
+
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 8px 25px rgba(37,99,235,0.4);
+}
+
+footer {
+    color: whitesmoke;
+}
+
+
+@media (max-width: 500px) {
+
+    .upload-card {
+
+        width: 100%;
+
+        padding: 30px 20px;
+    }
+
+    .upload-card h1 {
+
+        font-size: 2.2rem;
+    }
 }
