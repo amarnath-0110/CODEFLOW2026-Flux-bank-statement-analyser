@@ -1,5 +1,8 @@
 import express from "express";
 import bodyParser from "body-parser";
+import multer from "multer";
+import { defineFilePond } from 'filepond';
+const upload = multer({ dest: 'uploads/' })
 const app = express();
 const port = 3000;
 app.use(bodyParser.urlencoded({ extended: true }));

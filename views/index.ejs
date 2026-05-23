@@ -5,11 +5,50 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bank Statement Analyser</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="/styles/main.css">
+
+    <link href="https://unpkg.com/filepond/dist/filepond.min.css" rel="stylesheet">
 </head>
 
 <body>
+
     <%- include('partials/header.ejs') %>
+
+        <div class="upload-container">
+            <div class="upload-card">
+
+                <h1>Upload Your PDF</h1>
+                <p>Select one or more PDF files to upload</p>
+
+                <form action="/upload" method="POST" enctype="multipart/form-data">
+
+                    <label for="my-file" class="upload-label">
+                        Choose Documents
+                    </label>
+
+                    <input id="my-file" type="file" name="files" accept="application/pdf" multiple required />
+
+                    <button type="submit" class="upload-btn">
+                        Upload Files
+                    </button>
+
+                </form>
+
+            </div>
+        </div>
+
         <%- include('partials/footer.ejs') %>
+
+            <script src="https://unpkg.com/filepond/dist/filepond.min.js"></script>
+
+            <script>
+                FilePond.create(document.querySelector('#my-file'));
+            </script>
+
 </body>
 
 </html>
