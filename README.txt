@@ -46,3 +46,6 @@ The port which will accept the uploaded files was made onto the "index.ejs" and 
 [May 23, 09:30 pm]
 Commit 7:
 Readme file was added.
+[May 23, 11:14 pm]
+Commit 8:
+Enabled storage of uploaded files by user

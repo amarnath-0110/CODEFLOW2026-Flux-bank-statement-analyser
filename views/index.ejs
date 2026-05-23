@@ -30,11 +30,10 @@
                         Choose Documents
                     </label>
 
-                    <input id="my-file" type="file" name="files" accept="application/pdf" multiple required />
+                    <input id="my-file" type="file" name="files" accept=".pdf,.csv" required />
 
                     <button type="submit" class="upload-btn">
-                        Upload Files
-                    </button>
+                        Upload Files</button>
 
                 </form>
 
@@ -46,7 +45,10 @@
             <script src="https://unpkg.com/filepond/dist/filepond.min.js"></script>
 
             <script>
-                FilePond.create(document.querySelector('#my-file'));
+                FilePond.create(document.querySelector('#my-file'), {
+                    instantUpload: false,
+                    storeAsFile: true
+                });
             </script>
 
 </body>
