@@ -228,18 +228,25 @@ app.post("/upload", upload.single("files"), async (req, res) => {
         const insights = calculateInsights(categorized);
         const ai = await generateAISummary(insights);
 
-        res.json({
-            status: "success",
-            categorization: categorized,
-            income_vs_expense: {
-                total_income: insights.total_income,
-                total_expense: insights.total_expenses
-            },
-            category_breakdown: insights.category_breakdown,
-            recurring_payments: insights.recurring_payments,
-            financial_health: insights.financial_health,
-            ai_summary: ai,
-            unusual_transactions: insights.unusual_transactions
+        res.render("report.ejs", {
+
+         categorization: categorized,
+
+        income_vs_expense: {
+        total_income: insights.total_income,
+        total_expense: insights.total_expenses
+        },
+
+        category_breakdown: insights.category_breakdown,
+
+        recurring_payments: insights.recurring_payments,
+
+        financial_health: insights.financial_health,
+
+        ai_summary: ai,
+
+        unusual_transactions: insights.unusual_transactions
+
         });
     } catch (err) {
         if (req.file && fs.existsSync(req.file.path)) {
