@@ -5,14 +5,16 @@ import fs from "fs";
 import PDFParser from "pdf2json";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import "dotenv/config";
-
+if (!fs.existsSync("uploads")) {
+    fs.mkdirSync("uploads");
+}
 const upload = multer({
     dest: "uploads/", limits: {
         fileSize: 10 * 1024 * 1024
     }
 });
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
