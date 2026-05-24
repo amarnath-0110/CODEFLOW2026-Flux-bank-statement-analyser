@@ -2,15 +2,13 @@
 
 This is a help corner on how to run the files and will also have logs on the commits.
 
-index.ejs file contains the main ejs codes.
+index.ejs file contains the main ejs frontend homepage.
 index.js contains the backend.
-public/styles has a main.css folder for css.
+public/styles has a main.css file for css.
 
 first in the terminal install the necessary packages by typing:
 
-npm i express
-npm i body-parser
-npm i multer
+npm install express body-parser multer pdf2json @google/generative-ai dotenv ejs
 
 then run the code :
 
@@ -49,3 +47,7 @@ Readme file was added.
 [May 23, 11:14 pm]
 Commit 8:
 Enabled storage of uploaded files by user
+[May 24 9:52 am]
+Commits 9,10,11:
+Parsed incoming pdf and csv files
+Used Gemini API to scan pdf and generate summary
