@@ -4,13 +4,13 @@ import multer from "multer";
 import fs from "fs";
 import PDFParser from "pdf2json";
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import "dotenv/config";
+//import "dotenv/config";
 
 const upload = multer({ dest: "uploads/" });
 const app = express();
 const port = 3000;
 
-const genAI = new GoogleGenerativeAI("AIzaSyBz2bdfCFbW4yGtb4NEBNgsn5bE3APUjbA");
+const genAI = new GoogleGenerativeAI("AIzaSyCEa0AOURbpun0DDHAgg3S9jkk2iggWHZw");
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));

@@ -1,0 +1,473 @@
+<%- include('header') %>
+
+<style>
+    .report-wrap {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 3rem 2.5rem;
+    }
+
+    /* ── PAGE TITLE ── */
+    .page-title {
+        margin-bottom: 3rem;
+        animation: fadeUp 0.5s ease both;
+    }
+    .page-title h1 {
+        font-family: var(--font-display);
+        font-size: clamp(2rem, 4vw, 3rem);
+        font-weight: 800;
+        letter-spacing: -0.04em;
+        line-height: 1.1;
+    }
+    .page-title h1 span { color: var(--accent); }
+    .page-title p {
+        margin-top: 0.6rem;
+        color: var(--muted);
+        font-size: 0.95rem;
+    }
+
+    /* ── STAT CARDS ── */
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 1rem;
+        margin-bottom: 2rem;
+        animation: fadeUp 0.5s 0.1s ease both;
+    }
+
+    .stat-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 1rem;
+        padding: 1.5rem;
+        position: relative;
+        overflow: hidden;
+        transition: border-color 0.2s;
+    }
+    .stat-card:hover { border-color: var(--border-accent); }
+    .stat-card::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; right: 0;
+        height: 2px;
+    }
+    .stat-card.income::before { background: var(--green); }
+    .stat-card.expense::before { background: var(--red); }
+    .stat-card.category::before { background: var(--accent); }
+    .stat-card.balance::before { background: var(--accent2); }
+
+    .stat-label {
+        font-family: var(--font-mono);
+        font-size: 0.68rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 0.8rem;
+    }
+    .stat-value {
+        font-family: var(--font-display);
+        font-size: 1.8rem;
+        font-weight: 700;
+        letter-spacing: -0.03em;
+        line-height: 1;
+    }
+    .stat-value.green { color: var(--green); }
+    .stat-value.red { color: var(--red); }
+    .stat-value.accent { color: var(--accent); }
+    .stat-value.orange { color: var(--accent2); }
+
+    /* ── SECTION TITLE ── */
+    .section-title {
+        font-family: var(--font-display);
+        font-size: 1.1rem;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+    }
+    .section-title::after {
+        content: '';
+        flex: 1;
+        height: 1px;
+        background: var(--border);
+    }
+
+    /* ── TWO COL LAYOUT ── */
+    .two-col {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+        animation: fadeUp 0.5s 0.2s ease both;
+    }
+    @media (max-width: 768px) { .two-col { grid-template-columns: 1fr; } }
+
+    .panel {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 1rem;
+        padding: 1.5rem;
+    }
+
+    /* ── CHART ── */
+    .chart-wrap {
+        position: relative;
+        height: 260px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* ── CATEGORY BARS ── */
+    .cat-list { display: flex; flex-direction: column; gap: 0.7rem; }
+    .cat-item { display: flex; flex-direction: column; gap: 0.3rem; }
+    .cat-meta { display: flex; justify-content: space-between; align-items: center; }
+    .cat-name { font-size: 0.85rem; color: var(--text); }
+    .cat-amount { font-family: var(--font-mono); font-size: 0.8rem; color: var(--muted); }
+    .cat-bar-bg { height: 4px; background: var(--surface2); border-radius: 99px; overflow: hidden; }
+    .cat-bar-fill { height: 100%; border-radius: 99px; background: var(--accent); transition: width 1s ease; }
+
+    /* ── SUMMARY BOX ── */
+    .summary-box {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-left: 3px solid var(--accent);
+        border-radius: 1rem;
+        padding: 1.5rem 2rem;
+        margin-bottom: 2rem;
+        animation: fadeUp 0.5s 0.3s ease both;
+    }
+    .summary-box p {
+        font-size: 0.95rem;
+        line-height: 1.7;
+        color: #c0c0d0;
+    }
+
+    /* ── RECOMMENDATIONS ── */
+    .rec-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 1rem;
+        margin-bottom: 2rem;
+        animation: fadeUp 0.5s 0.35s ease both;
+    }
+    .rec-item {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 1rem;
+        padding: 1.2rem 1.4rem;
+        display: flex;
+        gap: 0.8rem;
+        align-items: flex-start;
+        transition: border-color 0.2s;
+    }
+    .rec-item:hover { border-color: var(--accent); }
+    .rec-num {
+        font-family: var(--font-mono);
+        font-size: 0.7rem;
+        color: var(--accent);
+        background: #7c6af720;
+        border: 1px solid #7c6af740;
+        width: 24px; height: 24px;
+        border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        flex-shrink: 0;
+        margin-top: 1px;
+    }
+    .rec-text { font-size: 0.88rem; line-height: 1.55; color: #c0c0d0; }
+
+    /* ── UNUSUAL + RECURRING ── */
+    .tag-list { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .tag {
+        font-family: var(--font-mono);
+        font-size: 0.72rem;
+        padding: 0.3rem 0.75rem;
+        border-radius: 2rem;
+        border: 1px solid var(--border-accent);
+        background: var(--surface2);
+        color: var(--muted);
+    }
+    .tag.unusual { border-color: #f8717140; color: var(--red); background: #f8717110; }
+    .tag.recurring { border-color: #7c6af740; color: var(--accent); background: #7c6af710; }
+
+    /* ── TRANSACTIONS TABLE ── */
+    .table-wrap {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 1rem;
+        overflow: hidden;
+        margin-bottom: 2rem;
+        animation: fadeUp 0.5s 0.4s ease both;
+    }
+    .table-header {
+        padding: 1rem 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 1px solid var(--border);
+    }
+    .table-search {
+        background: var(--surface2);
+        border: 1px solid var(--border-accent);
+        border-radius: 0.5rem;
+        padding: 0.4rem 0.8rem;
+        color: var(--text);
+        font-family: var(--font-mono);
+        font-size: 0.78rem;
+        outline: none;
+        width: 200px;
+        transition: border-color 0.2s;
+    }
+    .table-search:focus { border-color: var(--accent); }
+    .table-search::placeholder { color: var(--muted); }
+
+    table { width: 100%; border-collapse: collapse; }
+    thead tr { background: var(--surface2); }
+    th {
+        font-family: var(--font-mono);
+        font-size: 0.65rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--muted);
+        padding: 0.75rem 1.2rem;
+        text-align: left;
+        font-weight: 400;
+    }
+    td {
+        padding: 0.8rem 1.2rem;
+        font-size: 0.85rem;
+        border-bottom: 1px solid var(--border);
+        vertical-align: middle;
+    }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: #ffffff04; }
+
+    .td-date { font-family: var(--font-mono); font-size: 0.78rem; color: var(--muted); white-space: nowrap; }
+    .td-narration { max-width: 260px; }
+    .td-narration-text { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; max-width: 240px; }
+    .td-debit { font-family: var(--font-mono); color: var(--red); }
+    .td-credit { font-family: var(--font-mono); color: var(--green); }
+    .td-balance { font-family: var(--font-mono); color: var(--muted); font-size: 0.78rem; }
+
+    .badge {
+        display: inline-block;
+        font-family: var(--font-mono);
+        font-size: 0.65rem;
+        padding: 0.2rem 0.55rem;
+        border-radius: 2rem;
+        letter-spacing: 0.05em;
+        background: var(--surface2);
+        border: 1px solid var(--border-accent);
+        color: var(--muted);
+        white-space: nowrap;
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+        from { opacity: 0; transform: translateY(16px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .hidden-row { display: none; }
+</style>
+
+<div class="report-wrap">
+
+    <div class="page-title">
+        <h1>Financial <span>Report</span></h1>
+        <p>Analyzed by FinLens AI · <%= new Date().toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' }) %></p>
+    </div>
+
+    <!-- STAT CARDS -->
+    <div class="stats-grid">
+        <div class="stat-card income">
+            <div class="stat-label">Total Income</div>
+            <div class="stat-value green">₹<%= data.insights.total_income.toLocaleString('en-IN') %></div>
+        </div>
+        <div class="stat-card expense">
+            <div class="stat-label">Total Expenses</div>
+            <div class="stat-value red">₹<%= data.insights.total_expenses.toLocaleString('en-IN') %></div>
+        </div>
+        <div class="stat-card balance">
+            <div class="stat-label">Net Balance</div>
+            <div class="stat-value orange">₹<%= (data.insights.total_income - data.insights.total_expenses).toLocaleString('en-IN') %></div>
+        </div>
+        <div class="stat-card category">
+            <div class="stat-label">Top Spend Category</div>
+            <div class="stat-value accent"><%= data.insights.highest_spending_category %></div>
+        </div>
+    </div>
+
+    <!-- CHART + CATEGORY BREAKDOWN -->
+    <div class="two-col">
+        <div class="panel">
+            <div class="section-title">Spending by Category</div>
+            <div class="chart-wrap">
+                <canvas id="categoryChart"></canvas>
+            </div>
+        </div>
+        <div class="panel">
+            <div class="section-title">Category Breakdown</div>
+            <div class="cat-list" id="catBars"></div>
+        </div>
+    </div>
+
+    <!-- AI SUMMARY -->
+    <div class="section-title">AI Summary</div>
+    <div class="summary-box">
+        <p><%= data.summary %></p>
+    </div>
+
+    <!-- RECOMMENDATIONS -->
+    <div class="section-title">Recommendations</div>
+    <div class="rec-list">
+        <% data.recommendations.forEach((rec, i) => { %>
+        <div class="rec-item">
+            <div class="rec-num"><%= i + 1 %></div>
+            <div class="rec-text"><%= rec %></div>
+        </div>
+        <% }) %>
+    </div>
+
+    <!-- RECURRING + UNUSUAL -->
+    <div class="two-col" style="animation-delay: 0.45s;">
+        <div class="panel">
+            <div class="section-title">Recurring Payments</div>
+            <div class="tag-list">
+                <% data.insights.recurring_payments.forEach(r => { %>
+                <span class="tag recurring"><%= r %></span>
+                <% }) %>
+            </div>
+        </div>
+        <div class="panel">
+            <div class="section-title">Unusual Transactions</div>
+            <div class="tag-list">
+                <% data.insights.unusual_transactions.forEach(u => { %>
+                <span class="tag unusual"><%= u %></span>
+                <% }) %>
+            </div>
+        </div>
+    </div>
+
+    <!-- TRANSACTIONS TABLE -->
+    <div class="section-title">All Transactions</div>
+    <div class="table-wrap">
+        <div class="table-header">
+            <span class="section-title" style="margin:0; font-size:0.9rem;"><%= data.transactions.length %> transactions</span>
+            <input class="table-search" type="text" id="txSearch" placeholder="Search transactions...">
+        </div>
+        <div style="overflow-x: auto;">
+            <table id="txTable">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Narration</th>
+                        <th>Category</th>
+                        <th>Debit</th>
+                        <th>Credit</th>
+                        <th>Balance</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% data.transactions.forEach(tx => { %>
+                    <tr>
+                        <td class="td-date"><%= tx.date %></td>
+                        <td class="td-narration"><span class="td-narration-text" title="<%= tx.narration %>"><%= tx.narration %></span></td>
+                        <td><span class="badge"><%= tx.category %></span></td>
+                        <td class="td-debit"><%= tx.debit > 0 ? '₹' + tx.debit.toLocaleString('en-IN') : '—' %></td>
+                        <td class="td-credit"><%= tx.credit > 0 ? '₹' + tx.credit.toLocaleString('en-IN') : '—' %></td>
+                        <td class="td-balance">₹<%= tx.balance.toLocaleString('en-IN') %></td>
+                    </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script>
+    const transactions = <%- JSON.stringify(data.transactions) %>;
+
+    // Build category totals
+    const catTotals = {};
+    transactions.forEach(tx => {
+        if (tx.debit > 0) {
+            catTotals[tx.category] = (catTotals[tx.category] || 0) + tx.debit;
+        }
+    });
+
+    const categories = Object.keys(catTotals).sort((a, b) => catTotals[b] - catTotals[a]);
+    const amounts = categories.map(c => catTotals[c]);
+    const maxAmount = Math.max(...amounts);
+
+    const palette = [
+        '#7c6af7','#f7a76a','#4ade80','#f87171','#fbbf24',
+        '#60a5fa','#e879f9','#34d399','#fb923c','#a78bfa'
+    ];
+
+    // Donut chart
+    new Chart(document.getElementById('categoryChart'), {
+        type: 'doughnut',
+        data: {
+            labels: categories,
+            datasets: [{
+                data: amounts,
+                backgroundColor: palette,
+                borderColor: '#111118',
+                borderWidth: 3,
+                hoverOffset: 6
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: '68%',
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    callbacks: {
+                        label: ctx => ` ₹${ctx.parsed.toLocaleString('en-IN')}`
+                    }
+                }
+            }
+        }
+    });
+
+    // Category bars
+    const barContainer = document.getElementById('catBars');
+    categories.forEach((cat, i) => {
+        const pct = ((amounts[i] / maxAmount) * 100).toFixed(1);
+        barContainer.innerHTML += `
+            <div class="cat-item">
+                <div class="cat-meta">
+                    <span class="cat-name">${cat}</span>
+                    <span class="cat-amount">₹${amounts[i].toLocaleString('en-IN')}</span>
+                </div>
+                <div class="cat-bar-bg">
+                    <div class="cat-bar-fill" style="width:0%; background:${palette[i % palette.length]}"
+                         data-target="${pct}"></div>
+                </div>
+            </div>`;
+    });
+
+    // Animate bars
+    setTimeout(() => {
+        document.querySelectorAll('.cat-bar-fill').forEach(el => {
+            el.style.width = el.dataset.target + '%';
+        });
+    }, 300);
+
+    // Table search
+    document.getElementById('txSearch').addEventListener('input', function () {
+        const q = this.value.toLowerCase();
+        document.querySelectorAll('#txTable tbody tr').forEach(row => {
+            row.classList.toggle('hidden-row', !row.textContent.toLowerCase().includes(q));
+        });
+    });
+</script>
+
+<%- include('footer') %>
