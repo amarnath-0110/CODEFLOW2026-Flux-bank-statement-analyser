@@ -103,9 +103,30 @@ const generateAISummary = async (insights) => {
     try {
         const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
-        const prompt = `Act as a financial advisor. Data: Income ₹${insights.total_income}, Expenses ₹${insights.total_expenses}, Top category ${insights.highest_spending_category}, Net ₹${insights.net_savings}, Breakdown ${JSON.stringify(
-            insights.category_breakdown
-        )}. Give 2 sentence summary and 3 suggestions.`;
+        const prompt = `You are a financial advisor.
+
+                            Analyze this financial data:
+
+                            Income: ₹${insights.total_income}
+                            Expenses: ₹${insights.total_expenses}
+                            Net Savings: ₹${insights.net_savings}
+                            Highest Spending Category: ${insights.highest_spending_category}
+
+                            Category Breakdown:
+                            ${JSON.stringify(insights.category_breakdown)}
+
+                            Generate a SHORT and PRECISE financial summary in this format:
+
+                            Overview:
+                            (Only 1-2 short sentences)
+
+                            Suggestions:
+                            • Suggestion 1
+                            • Suggestion 2
+                            • Suggestion 3
+
+                            Keep the response concise, professional, and dashboard-friendly.
+                            Avoid long paragraphs and unnecessary explanations.`;
 
         const result = await model.generateContent(prompt);
         return result.response.text();

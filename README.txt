@@ -53,3 +53,20 @@ Enabled storage of uploaded files by user
 Commits 9,10,11:
 Parsed incoming pdf and csv files
 Used Gemini API to scan pdf and generate summary
+
+[May 24, 12:50 pm]
+Commit 12:
+Updated copromised API.
+
+
+[May 24, 03:27 pm]
+Commit 13:
+.env and .gitignore were added to hide API key.
+
+[May 24, 04:35 pm]
+Commit 14:
+Frontend page was added for getting the ai generated oooutput and display it to the user dynamically.
+
+[May 24, 08:35 pm]
+Commit 15:
+Added css for the report diplay.
