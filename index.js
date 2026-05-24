@@ -6,7 +6,11 @@ import PDFParser from "pdf2json";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import "dotenv/config";
 
-const upload = multer({ dest: "uploads/" });
+const upload = multer({
+    dest: "uploads/", limits: {
+        fileSize: 10 * 1024 * 1024
+    }
+});
 const app = express();
 const port = 3000;
 
@@ -224,7 +228,9 @@ const parsePDF = (filePath) => {
 app.get("/", (req, res) => {
     res.render("index.ejs");
 });
-
+app.get("/faqs", (req, res) => {
+    res.render("faq.ejs");
+});
 app.post("/upload", upload.single("files"), async (req, res) => {
     try {
         if (!req.file) {
@@ -251,25 +257,28 @@ app.post("/upload", upload.single("files"), async (req, res) => {
 
         res.render("report.ejs", {
 
-         categorization: categorized,
+            categorization: categorized,
 
-        income_vs_expense: {
-        total_income: insights.total_income,
-        total_expense: insights.total_expenses
-        },
+            income_vs_expense: {
+                total_income: insights.total_income,
+                total_expense: insights.total_expenses
+            },
 
-        category_breakdown: insights.category_breakdown,
+            category_breakdown: insights.category_breakdown,
 
-        recurring_payments: insights.recurring_payments,
+            recurring_payments: insights.recurring_payments,
 
-        financial_health: insights.financial_health,
+            financial_health: insights.financial_health,
 
-        ai_summary: ai,
+            ai_summary: ai,
 
-        unusual_transactions: insights.unusual_transactions
+            unusual_transactions: insights.unusual_transactions
 
         });
     } catch (err) {
+        if (err.code === "LIMIT_FILE_SIZE") {
+            return res.status(400).send("File size exceeds 10MB limit.");
+        }
         if (req.file && fs.existsSync(req.file.path)) {
             fs.unlinkSync(req.file.path);
         }
